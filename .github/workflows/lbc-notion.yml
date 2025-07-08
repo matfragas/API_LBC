@@ -25,3 +25,7 @@ jobs:
 
       - name: Exécuter le scraper
         env:
+          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+          NOTION_DATABASE_ID: ${{ secrets.NOTION_DATABASE_ID }}
+        run: |
+          python lbc_to_notion.py
