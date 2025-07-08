@@ -3,8 +3,8 @@ import json
 import time
 from datetime import datetime
 
-NOTION_TOKEN = "votre_secret_notion"
-NOTION_DATABASE_ID = "votre_database_id"
+NOTION_TOKEN = "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"
+NOTION_DATABASE_ID = "222e43cf42f5809e969a000cebc28997"
 
 def get_annonces(le_filter, limit=35, limit_pages=3):
     url = "https://api.leboncoin.fr/finder/search"
@@ -68,19 +68,19 @@ def send_to_notion(ad):
     data = {
         "parent": { "database_id": NOTION_DATABASE_ID },
         "properties": {
-            "Title": {
+            "Titre": {
                 "title": [{"text": {"content": ad["title"]}}]
             },
-            "Price": {
+            "Prix": {
                 "number": ad.get("price", 0)
             },
-            "City": {
+            "Localisation": {
                 "rich_text": [{"text": {"content": ad["location"].get("city", "")}}]
             },
-            "Link": {
+            "URL": {
                 "url": f"https://www.leboncoin.fr/vi/{ad['id']}.htm"
             },
-            "LBC ID": {
+            "LBC_ID": {
                 "rich_text": [{"text": {"content": ad["id"]}}]
             }
         }
