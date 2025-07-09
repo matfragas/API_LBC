@@ -9,7 +9,9 @@ NOTION_DATABASE_ID = "222e43cf42f5809e969a000cebc28997"
 import requests
 
 # Liste des villes que tu veux surveiller (sensible à la casse !)
-VILLES_CIBLEES = {"Laval", "Changé", "Saint-Berthevin", "Louverné", "L'Huisserie"}
+#VILLES_CIBLEES = {"Laval", "Changé", "Saint-Berthevin", "Louverné", "L'Huisserie"}
+# Liste des codes postaux que tu veux cibler
+ZIPCODES_CIBLES = {"5300", "53810", "53950", "53940", "53970"}  # <-- adapte à tes besoins
 
 # Paramètres de la requête API
 url = "https://api.leboncoin.fr/finder/search"
@@ -45,10 +47,15 @@ annonces = data.get("ads", [])
 print(f"Annonces trouvées : {len(annonces)}")
 
 for ad in annonces:
-    ville = ad.get("location", {}).get("city")
-    if ville not in VILLES_CIBLEES:
-        continue  # Ignore si la ville n'est pas ciblée
-
+    #ville = ad.get("location", {}).get("city")
+    #if ville not in VILLES_CIBLEES:
+    #    continue  # Ignore si la ville n'est pas ciblée
+    
+    # Vérifie que le code postal de l'annonce est dans ta liste
+    zipcode = ad.get("location", {}).get("zipcode")
+    if zipcode not in ZIPCODES_CIBLES:
+        continue  # Ignore cette annonce
+    
     titre = ad.get("subject", "Sans titre")
     prix = ad.get("price", ["?"])[0]
     lien = ad.get("url")
