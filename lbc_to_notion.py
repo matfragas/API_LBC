@@ -24,11 +24,14 @@ def get_annonces():
             }
         },
         "location": {
-            "locations": [{
-                "zipcode": "53000",
-                "city": "Laval",
-                "department_id": "53"
-            }]
+          "locations": [
+            {
+              "zipcode": "53000",
+              "city": "Laval",
+              "department_id": "53",
+              "region_id": "52"
+            }
+          ]
         },
         "sort_by": "time",
         "sort_order": "desc"
