@@ -47,6 +47,9 @@ annonces = data.get("ads", [])
 print(f"Annonces trouvées : {len(annonces)}")
 
 for ad in annonces:
+    titre = ad.get("subject", "Sans titre")
+    prix = ad.get("price", ["?"])[0]
+    lien = ad.get("url")    
     #ville = ad.get("location", {}).get("city")
     #if ville not in VILLES_CIBLEES:
     #    continue  # Ignore si la ville n'est pas ciblée
@@ -56,8 +59,6 @@ for ad in annonces:
     if zipcode not in ZIPCODES_CIBLES:
         continue  # Ignore cette annonce
     
-    titre = ad.get("subject", "Sans titre")
-    prix = ad.get("price", ["?"])[0]
-    lien = ad.get("url")
+
     print(f"- {titre} ([{prix}] €) - {ville} : {lien}")
 
