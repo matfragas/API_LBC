@@ -13,13 +13,18 @@ VILLES_CIBLEES = {"Laval", "Changé", "Saint-Berthevin", "Louverné", "L'Huisser
 
 # Paramètres de la requête API
 url = "https://api.leboncoin.fr/finder/search"
+headers = {
+    "Content-Type": "application/json",
+    "User-Agent": "Leboncoin/5.5.0 (iPhone; iOS 15.1; Scale/3.00)"
+}
+
 payload = {
     "limit": 50,
     "offset": 0,
     "filters": {
         "category": {"id": "9"},  # Ventes immobilières
         "enums": {
-            "real_estate_type": ["1", "2"],  # Maison et appartement
+            "real_estate_type": ["1"],  # Maison
         },
         #"keywords": {
         #    "text": "",  # Pas de mot-clé particulier
@@ -33,7 +38,7 @@ payload = {
 }
 
 # Appel à l'API
-response = requests.post(url, json=payload)
+response = requests.post(url, headers=headers, json=payload)
 data = response.json()
 
 annonces = data.get("ads", [])
