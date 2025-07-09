@@ -21,10 +21,10 @@ payload = {
         "enums": {
             "real_estate_type": ["1", "2"],  # Maison et appartement
         },
-        "keywords": {
-            "text": "",  # Pas de mot-clé particulier
-            "type": "all"
-        },
+        #"keywords": {
+        #    "text": "",  # Pas de mot-clé particulier
+        #    "type": "all"
+        #},
         "location": {
             "department_id": "53", 
         }
