@@ -8,6 +8,11 @@ def chercher_annonces_par_code_postal(code_postal):
     print(f"\n🔎 Récupération des annonces pour le code postal {code_postal}...")
     toutes_annonces = []
     for offset in range(0, MAX_OFFSETS, 50):
+        url = "https://api.leboncoin.fr/finder/search"
+        headers = {
+            "Content-Type": "application/json",
+            "User-Agent": "Leboncoin/5.5.0 (iPhone; iOS 15.1; Scale/3.00)"
+        }
         payload = {
             "limit": 50,
             "offset": offset,
@@ -27,7 +32,7 @@ def chercher_annonces_par_code_postal(code_postal):
             "sort_by": "time"
         }
 
-        response = requests.post("https://api.leboncoin.fr/finder/search", json=payload)
+        response = requests.post((url, headers=headers, json=payload)
         if response.status_code != 200:
             print(f"❌ Erreur pour {code_postal} : {response.status_code}")
             break
