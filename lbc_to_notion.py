@@ -18,9 +18,9 @@ def get_annonces():
         "limit": 10,
         "offset": 0,
         "filters": {
-            "category": {"id": "10"},
+            "category": {"id": "9"},
             "enums": {
-                "real_estate_type": ["2"]
+                "real_estate_type": ["1"]
             }
         },
         "location": {
