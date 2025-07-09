@@ -25,9 +25,8 @@ def get_annonces():
         },
         "location": {
             "locations": [{
-                "zipcode": "75000",
-                "city": "Paris",
-                "department_id": "75"
+                "zipcode": "53000",
+                "department_id": "53"
             }]
         },
         "sort_by": "time",
