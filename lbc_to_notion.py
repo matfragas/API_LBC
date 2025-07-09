@@ -50,7 +50,7 @@ for ad in annonces:
     titre = ad.get("subject", "Sans titre")
     prix = ad.get("price", ["?"])[0]
     lien = ad.get("url")    
-    #ville = ad.get("location", {}).get("city")
+    ville = ad.get("location", {}).get("city")
     #if ville not in VILLES_CIBLEES:
     #    continue  # Ignore si la ville n'est pas ciblée
     print(f"** {titre} ([{prix}] €) - {ville} : {lien}")
