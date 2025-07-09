@@ -45,4 +45,8 @@ def get_annonces():
         print(f"- {title} ({price} €) - {city}")
 
 
+    print(json.dumps(annonces[0], indent=2, ensure_ascii=False))
+
+
+
 get_annonces()
