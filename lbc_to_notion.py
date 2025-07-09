@@ -1,33 +1,37 @@
 import requests
 import time
 
-VILLES_CIBLEES = ["Laval", "Changé", "L'huisserie", "Louverné", "Saint-Berthevin"]
-MAX_OFFSETS = 100  # Car LeBonCoin ne donne que les annonces avec offset <= 100
+CODES_POSTAUX_CIBLE = ["53000", "53810", "53940", "53950", "53970"]  # Alès, Nîmes, Uzès, etc.
+MAX_OFFSETS = 100  # LeBonCoin limite à 100 résultats par recherche
 
-def chercher_annonces_par_ville(ville):
-    print(f"\n🔎 Récupération des annonces pour {ville}...")
+def chercher_annonces_par_code_postal(code_postal):
+    print(f"\n🔎 Récupération des annonces pour le code postal {code_postal}...")
     toutes_annonces = []
     for offset in range(0, MAX_OFFSETS, 50):
         payload = {
             "limit": 50,
             "offset": offset,
             "filters": {
-                "category": {"id": "9"},  # Ventes immobilières
+                "category": {"id": "9"},  # Immobilier > Vente
                 "enums": {
-                    "real_estate_type": ["1"],  # Maison
+                    "real_estate_type": ["1", "2"]  # Maison, Appartement
                 },
                 "keywords": {
                     "text": "",
                     "type": "all"
                 },
                 "location": {
-                    "city": ville
+                    "zipcodes": [code_postal]
                 }
             },
             "sort_by": "time"
         }
 
         response = requests.post("https://api.leboncoin.fr/finder/search", json=payload)
+        if response.status_code != 200:
+            print(f"❌ Erreur pour {code_postal} : {response.status_code}")
+            break
+
         data = response.json()
         annonces = data.get("ads", [])
 
@@ -35,20 +39,20 @@ def chercher_annonces_par_ville(ville):
             break
 
         toutes_annonces.extend(annonces)
-        time.sleep(0.5)  # éviter d'être bloqué
+        time.sleep(0.5)  # Pause anti-blocage
 
-    print(f"✅ {len(toutes_annonces)} annonces récupérées pour {ville}")
+    print(f"✅ {len(toutes_annonces)} annonces récupérées pour {code_postal}")
     return toutes_annonces
 
 
-# Récupérer toutes les annonces filtrées ville par ville
+# Récupérer toutes les annonces pour chaque code postal
 annonces_filtrees = []
-for ville in VILLES_CIBLEES:
-    annonces_ville = chercher_annonces_par_ville(ville)
-    annonces_filtrees.extend(annonces_ville)
+for code in CODES_POSTAUX_CIBLE:
+    annonces_cp = chercher_annonces_par_code_postal(code)
+    annonces_filtrees.extend(annonces_cp)
 
 print(f"\n🎉 Total annonces récupérées : {len(annonces_filtrees)}")
 
-# Exemple de traitement ou affichage
+# Exemple : afficher les annonces résumées
 for ad in annonces_filtrees:
     print(f"- {ad.get('subject')} ({ad.get('price', ['?'])[0]} €) - {ad.get('location', {}).get('city')} - {ad.get('url')}")
