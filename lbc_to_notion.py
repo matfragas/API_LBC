@@ -20,12 +20,13 @@ def get_annonces():
         "filters": {
             "category": {"id": "10"},
             "enums": {
-                "real_estate_type": ["1"]
+                "real_estate_type": ["2"]
             }
         },
         "location": {
             "locations": [{
                 "zipcode": "53000",
+                "city": "Laval",
                 "department_id": "53"
             }]
         },
