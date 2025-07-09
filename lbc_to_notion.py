@@ -39,6 +39,10 @@ def get_annonces():
     annonces = data.get("ads", [])
     print(f"Annonces trouvées : {len(annonces)}")
     for a in annonces:
-        print(f"- {a['title']} ({a['price']} €) - {a['location'].get('city')}")
+        title = a.get("title", "Sans titre")
+        price = a.get("price", 0)
+        city = a.get("location", {}).get("city", "Ville inconnue")
+        print(f"- {title} ({price} €) - {city}")
+
 
 get_annonces()
