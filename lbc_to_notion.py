@@ -1,60 +1,54 @@
 import requests
-import json
 import time
-from datetime import datetime
 
-NOTION_TOKEN = "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"
-NOTION_DATABASE_ID = "222e43cf42f5809e969a000cebc28997"
+VILLES_CIBLEES = ["Laval", "Changé", "L'huisserie", "Louverné", "Saint-Berthevin"]
+MAX_OFFSETS = 100  # Car LeBonCoin ne donne que les annonces avec offset <= 100
 
-import requests
-
-# Liste des villes que tu veux surveiller (sensible à la casse !)
-#VILLES_CIBLEES = {"Laval", "Changé", "Saint-Berthevin", "Louverné", "L'Huisserie"}
-# Liste des codes postaux que tu veux cibler
-ZIPCODES_CIBLES = {"5300", "53810", "53950", "53940", "53970"}  # <-- adapte à tes besoins
-
-# Paramètres de la requête API
-url = "https://api.leboncoin.fr/finder/search"
-headers = {
-    "Content-Type": "application/json",
-    "User-Agent": "Leboncoin/5.5.0 (iPhone; iOS 15.1; Scale/3.00)"
-}
-
-payload = {
-    "limit": 5000,
-    "offset": 0,
-    "filters": {
-        "category": {"id": "9"},  # Ventes immobilières
-        "enums": {
-            "real_estate_type": ["1"],  # Maison
-        },
-        "location": {
-            "department_id": "53", 
+def chercher_annonces_par_ville(ville):
+    print(f"\n🔎 Récupération des annonces pour {ville}...")
+    toutes_annonces = []
+    for offset in range(0, MAX_OFFSETS, 50):
+        payload = {
+            "limit": 50,
+            "offset": offset,
+            "filters": {
+                "category": {"id": "9"},  # Ventes immobilières
+                "enums": {
+                    "real_estate_type": ["1"],  # Maison
+                },
+                "keywords": {
+                    "text": "",
+                    "type": "all"
+                },
+                "location": {
+                    "city": ville
+                }
+            },
+            "sort_by": "time"
         }
-    },
-    "sort_by": "time"  # Trier par plus récent
-}
 
-# Appel à l'API
-response = requests.post(url, headers=headers, json=payload)
-data = response.json()
+        response = requests.post("https://api.leboncoin.fr/finder/search", json=payload)
+        data = response.json()
+        annonces = data.get("ads", [])
 
-annonces = data.get("ads", [])
-print(f"Annonces trouvées : {len(annonces)}")
+        if not annonces:
+            break
 
-for ad in annonces:
-    titre = ad.get("subject", "Sans titre")
-    prix = ad.get("price", ["?"])[0]
-    lien = ad.get("url")    
-    ville = ad.get("location", {}).get("city")
-    #if ville not in VILLES_CIBLEES:
-    #    continue  # Ignore si la ville n'est pas ciblée
-    print(f"** {titre} ([{prix}] €) - {ville} : {lien}")
-    # Vérifie que le code postal de l'annonce est dans ta liste
-    zipcode = ad.get("location", {}).get("zipcode")
-    if zipcode not in ZIPCODES_CIBLES:
-        continue  # Ignore cette annonce
-    
+        toutes_annonces.extend(annonces)
+        time.sleep(0.5)  # éviter d'être bloqué
 
-    print(f"- {titre} ([{prix}] €) - {ville} : {lien}")
+    print(f"✅ {len(toutes_annonces)} annonces récupérées pour {ville}")
+    return toutes_annonces
 
+
+# Récupérer toutes les annonces filtrées ville par ville
+annonces_filtrees = []
+for ville in VILLES_CIBLEES:
+    annonces_ville = chercher_annonces_par_ville(ville)
+    annonces_filtrees.extend(annonces_ville)
+
+print(f"\n🎉 Total annonces récupérées : {len(annonces_filtrees)}")
+
+# Exemple de traitement ou affichage
+for ad in annonces_filtrees:
+    print(f"- {ad.get('subject')} ({ad.get('price', ['?'])[0]} €) - {ad.get('location', {}).get('city')} - {ad.get('url')}")
