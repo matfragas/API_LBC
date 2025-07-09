@@ -19,7 +19,7 @@ headers = {
 }
 
 payload = {
-    "limit": 50,
+    "limit": 5000,
     "offset": 0,
     "filters": {
         "category": {"id": "9"},  # Ventes immobilières
