@@ -32,7 +32,7 @@ def chercher_annonces_par_code_postal(code_postal):
             "sort_by": "time"
         }
 
-        response = requests.post((url, headers=headers, json=payload)
+        response = requests.post(url, headers=headers, json=payload)
         if response.status_code != 200:
             print(f"❌ Erreur pour {code_postal} : {response.status_code}")
             break
