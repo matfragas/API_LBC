@@ -6,50 +6,46 @@ from datetime import datetime
 NOTION_TOKEN = "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"
 NOTION_DATABASE_ID = "222e43cf42f5809e969a000cebc28997"
 
+import requests
 
-def get_annonces():
-    url = "https://api.leboncoin.fr/finder/search"
-    headers = {
-        "Content-Type": "application/json",
-        "User-Agent": "Leboncoin/5.5.0 (iPhone; iOS 15.1; Scale/3.00)"
-    }
+# Liste des villes que tu veux surveiller (sensible à la casse !)
+VILLES_CIBLEES = {"Laval", "Changé", "Saint-Berthevin", "Louverné", "L'Huisserie"}
 
-    payload = {
-        "limit": 10,
-        "offset": 0,
-        "filters": {
-            "category": {"id": "9"},
-            "enums": {
-                "real_estate_type": ["1"]
-            }
+# Paramètres de la requête API
+url = "https://api.leboncoin.fr/finder/search"
+payload = {
+    "limit": 50,
+    "offset": 0,
+    "filters": {
+        "category": {"id": "9"},  # Ventes immobilières
+        "enums": {
+            "real_estate_type": ["1", "2"],  # Maison et appartement
+        },
+        "keywords": {
+            "text": "",  # Pas de mot-clé particulier
+            "type": "all"
         },
         "location": {
-          "locations": [
-            {
-              "zipcode": "53000",
-              "city": "Laval",
-              "department_id": "53",
-              "region_id": "52"
-            }
-          ]
-        },
-        "sort_by": "time",
-        "sort_order": "desc"
-    }
+            "department_id": "53", 
+        }
+    },
+    "sort_by": "time"  # Trier par plus récent
+}
 
-    response = requests.post(url, headers=headers, json=payload)
-    data = response.json()
-    annonces = data.get("ads", [])
-    print(f"Annonces trouvées : {len(annonces)}")
-    for a in annonces:
-        title = a.get("title", "Sans titre")
-        price = a.get("price", 0)
-        city = a.get("location", {}).get("city", "Ville inconnue")
-        print(f"- {title} ({price} €) - {city}")
+# Appel à l'API
+response = requests.post(url, json=payload)
+data = response.json()
 
+annonces = data.get("ads", [])
+print(f"Annonces trouvées : {len(annonces)}")
 
-    print(json.dumps(annonces[0], indent=2, ensure_ascii=False))
+for ad in annonces:
+    ville = ad.get("location", {}).get("city")
+    if ville not in VILLES_CIBLEES:
+        continue  # Ignore si la ville n'est pas ciblée
 
+    titre = ad.get("subject", "Sans titre")
+    prix = ad.get("price", ["?"])[0]
+    lien = ad.get("url")
+    print(f"- {titre} ([{prix}] €) - {ville} : {lien}")
 
-
-get_annonces()
