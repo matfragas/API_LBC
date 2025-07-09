@@ -50,7 +50,7 @@ for ad in annonces:
     #ville = ad.get("location", {}).get("city")
     #if ville not in VILLES_CIBLEES:
     #    continue  # Ignore si la ville n'est pas ciblée
-    
+    print(f"** {titre} ([{prix}] €) - {ville} : {lien}")
     # Vérifie que le code postal de l'annonce est dans ta liste
     zipcode = ad.get("location", {}).get("zipcode")
     if zipcode not in ZIPCODES_CIBLES:
