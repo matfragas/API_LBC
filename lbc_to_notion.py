@@ -55,6 +55,9 @@ annonces_filtrees = []
 for code in CODES_POSTAUX_CIBLE:
     annonces_cp = chercher_annonces_par_code_postal(code)
     annonces_filtrees.extend(annonces_cp)
+    print(f"\n ** Code : {code}")
+    print(f"\n ** annonces_cp : {annonces_cp}")
+    print(f"\n ** annonces_filtrees.extend(annonces_cp) : {annonces_filtrees.extend(annonces_cp)}")
 
 print(f"\n🎉 Total annonces récupérées : {len(annonces_filtrees)}")
 
